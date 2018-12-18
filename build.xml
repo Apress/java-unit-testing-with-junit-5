@@ -1,0 +1,78 @@
+<project default="all" xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:jacoco="antlib:org.jacoco.ant">
+
+    <property name="target.report.dir"     value="build/test-reports"/>
+
+    <!-- Install Ivy in ant lib. Is is far better tha to keep jars in repository -->
+
+    <ivy:retrieve file="./ivy.xml" sync="true" />
+
+    <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+        <classpath path="lib/org.jacoco.ant-0.7.2.201409121644.jar"/>
+    </taskdef>
+
+    <path id="test.lib.path">
+        <fileset dir="lib">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+
+    <property name="test.lib" refid="test.lib.path"/>
+
+    <target name="clean">
+        <delete dir="build"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="build/classes"/>
+        <javac srcdir="src/main" destdir="build/classes"/>
+    </target>
+
+    <target name="test-compile" depends="compile">
+        <mkdir dir="build/test-classes"/>
+        <javac srcdir="src/test" destdir="build/test-classes">
+            <classpath>
+                <path location="build/classes"/>
+                <pathelement path="${test.lib}"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="unit-tests" depends="test-compile">
+    <jacoco:coverage>
+        <java classname="org.junit.platform.console.ConsoleLauncher" classpath="build/classes:build/test-classes:${test.lib}:${test.lib}" fork="true">
+            <arg value="-scan-classpath"/>
+            <arg value="-n"/>
+            <arg value="^.*Spec?$"/>
+            <arg value="--reports-dir"/>
+            <arg value="${target.report.dir}"/>     
+        </java>
+    </jacoco:coverage>
+    </target>
+
+    <target name="report" depends="unit-tests">
+        <mkdir dir="${target.report.dir}/html"/>
+        <junitreport todir="${target.report.dir}">
+            <fileset dir="${target.report.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report todir="${target.report.dir}/html"/>
+        </junitreport>
+        <jacoco:report>
+            <executiondata>
+                <file file="jacoco.exec"/>
+            </executiondata>
+            <structure name="BooksToRead.com">
+                <classfiles>
+                    <fileset dir="build/classes"/>
+                </classfiles>
+                <sourcefiles encoding="UTF-8">
+                    <fileset dir="src/main"/>
+                </sourcefiles>
+            </structure>
+            <html destdir="${target.report.dir}/coverage"/>
+        </jacoco:report>
+    </target>
+
+    <target name="all" depends="clean, unit-tests, report"></target>
+
+</project>

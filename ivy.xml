@@ -1,0 +1,15 @@
+<ivy-module version="2.0">
+    <info organisation="bookstoread" module="bookstoread"/>
+    <dependencies>
+        <dependency org="org.junit.jupiter" name="junit-jupiter-api" rev="5.0.0-RC2"/>
+        <dependency org="org.junit.jupiter" name="junit-jupiter-engine" rev="5.0.0-RC2"/>
+        <dependency org="org.junit.jupiter" name="junit-jupiter-migrationsupport" rev="5.0.0-RC2"/>
+        <dependency org="org.mockito" name="mockito-core" rev="2.7.12"/>
+        <dependency org="org.assertj" name="assertj-core" rev="3.6.2"/>
+        <dependency org="org.junit.jupiter" name="junit-jupiter-engine" rev="5.0.0-RC2"/>
+        <dependency org="org.junit.platform" name="junit-platform-console" rev="1.0.0-RC2"/>
+        <dependency org="org.junit.platform" name="junit-platform-runner" rev="1.0.0-RC2"/>
+        <dependency org="junit" name="junit" rev="4.12"/>
+        <dependency org="org.jacoco" name="org.jacoco.ant" rev="0.7.2.201409121644" />
+    </dependencies>
+</ivy-module>
